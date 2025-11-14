@@ -4,15 +4,20 @@ import { useState } from "react";
 
 type GetInputType = {
   inputtype: string;
+  data: any;
+  setdata: any;
 };
-export const GetInput = ({ inputtype }: GetInputType) => {
-  const [data, setdata] = useState(undefined);
+export const GetInput = ({ inputtype, data, setdata }: GetInputType) => {
   return (
     <div>
       {inputtype == "text" ? (
         <div>
-          {/*gotta make the UI look good here*/}
-          <textarea className="bg-green-50"></textarea>{" "}
+          <textarea
+            onChange={(e) => {
+              setdata(e.target.value);
+            }}
+            className="bg-green-50"
+          ></textarea>{" "}
         </div>
       ) : (
         <div>
@@ -39,7 +44,7 @@ export const GetInput = ({ inputtype }: GetInputType) => {
                 accept="image/*"
               />
             </label>
-            {data && (
+            {data && data instanceof File && (
               <div className="flex flex-col justify-center items-center">
                 <img src={URL.createObjectURL(data)} />
                 <button

@@ -52,5 +52,4 @@ async def makePrediction(request: Request):
     id = random.randint(0, 1000000)
     app.post(f"/uploadimage/{id}")
     mapping = PredictWithModel(f"emotionsimages/{id}")
-    await postDataToDatabase(id, mapping, ip)
-    return mapping
+    return json.dumps(mapping)
