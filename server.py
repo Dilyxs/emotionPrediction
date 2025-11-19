@@ -1,4 +1,7 @@
 from fastapi import FastAPI, Request, UploadFile
+
+import os
+from fastapi.middleware.cors import CORSMiddleware  # <-- Import this
 import json
 from asyncPostGress import AsyncPostgresHelper
 from numpy import load
@@ -7,11 +10,8 @@ import shutil
 import random
 from dotenv import load_dotenv
 
-import os
 
 load_dotenv()
-dns = os.getenv("DNS")
-print(dns)
 db = AsyncPostgresHelper()
 
 
@@ -31,13 +31,28 @@ async def postDataToDatabase(id, emotionmap, ip):
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",  # The usual Next.js port
+    "http://127.0.0.1:3000",  # Alternative localhost
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_credentials=True,
+    allow_headers=["*"],
+)
+
 
 @app.post(f"/uploadimage/{id}")
 async def create_upload_file(file: UploadFile, id: int):
-    filepath = f"emotionsimages/{id}"
+    ext = os.path.splitext(file.filename)[1]
+    filepath = f"./emotionsimages/{id}{ext}"
 
     with open(filepath, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    return filepath
 
 
 @app.get("/")
@@ -46,10 +61,13 @@ async def getip(request: Request):
     return {"ip": ip}
 
 
-@app.get("/getprediction")
-async def makePrediction(request: Request):
+@app.post("/getprediction")
+async def makePrediction(request: Request, image: UploadFile):
     ip = request.headers.get("x-forwaded_for", request.client.host)
     id = random.randint(0, 1000000)
-    app.post(f"/uploadimage/{id}")
-    mapping = PredictWithModel(f"emotionsimages/{id}")
+    filepath = await create_upload_file(image, id)
+    mapping = PredictWithModel(filepath)
+    for k, v in mapping.items():
+        mapping[k] = float(v)
+    print(mapping)
     return json.dumps(mapping)

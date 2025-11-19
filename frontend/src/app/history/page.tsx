@@ -4,16 +4,14 @@ import { Journal } from "./Journal";
 
 export default function page() {
   return (
-    <div>
-      <Header word="Home"></Header>
-      <div className="flex flex-row justify-center items-center gap-y-8">
-        <p className="font-black ">
+    <div className="bg-white h-screen w-screen">
+      <Header directory="/" word="Home"></Header>
+      <div className=" bg-white flex flex-row justify-center items-center gap-y-8">
+        <h1 className="text-gray-800 text-3xl">
           Your Emotional Trend
           <br />
-          (Last Emotions)
-        </p>
+        </h1>
       </div>
-      <DisplayEmotions></DisplayEmotions>
       <Journal></Journal>
     </div>
   );

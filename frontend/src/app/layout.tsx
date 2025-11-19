@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Nunito } from "next/font/google";
 import "./globals.css";
+import { Historycontext } from "./context/historycontext";
+import { HistoryComponent } from "./context/historycomponent";
+type customdata = {
+  historydata: any;
+  sethistorydata: (data: any) => void;
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${nunito.className} ${nunito.className} antialiased`}>
-        {children}
+        <HistoryComponent>{children}</HistoryComponent>
       </body>
     </html>
   );
