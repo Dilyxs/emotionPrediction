@@ -40,7 +40,9 @@ export default function page() {
           <br />
         </h1>
       </div>
-      <EmotionGraph data={emotiondata} />
+      <div className="h-screen w-screen justify-center">
+        <EmotionGraph data={emotiondata} />
+      </div>
       <Journal></Journal>
     </div>
   );
