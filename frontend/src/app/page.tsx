@@ -1,15 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { GetInput } from "./Home/getinput";
 import { Header } from "./Home/header";
 import { PickInputType } from "./Home/pickinputtype";
 import { ClickAnalyzeEmotion } from "./helperfunc";
 import { DisplayEmotions } from "./history/DisplayEmotions";
+import { Historycontext } from "./context/historycontext";
 
 export default function Home() {
   const [inputtype, setinputtype] = useState("image");
   const [data, setdata] = useState<string | File | undefined>(undefined);
-  const [history, sethistory] = useState<any[]>([]);
+
+  const { historydata: history, sethistorydata: sethistory } =
+    useContext(Historycontext)!;
   const [displayEmotion, setdisplayEmotion] = useState(false);
 
   return (
@@ -40,6 +43,7 @@ export default function Home() {
                 setdata(undefined);
                 sethistory([...history, response]);
                 setdisplayEmotion(true);
+                console.log(history);
               }
             }}
             className="bg-white text-gray-900 font-bold rounded-full border-2 border-blue-500 py-3 px-20 hover:bg-gray-100"
